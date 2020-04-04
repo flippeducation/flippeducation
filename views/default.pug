@@ -1,0 +1,25 @@
+doctype html
+html(lang="en-US")
+  head: block head
+    title #{title ? `${title} - ` : ""}flippeducation
+    meta(charset="utf8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    link(rel="stylesheet" type="text/css" href="/css/pure-min.css")
+    link(rel="stylesheet" type="text/css" href="/css/grids-responsive-min.css")
+    link(rel="stylesheet" type="text/css" href="/css/main.css")
+  body
+    .pure-g
+      .pure-u-1.pure-u-md-2-24
+      .pure-u-1.pure-u-md-20-24
+        .pure-g.navbar: .pure-u-1: .pure-menu.pure-menu-horizontal
+          a(href="/").pure-menu-heading flippeducation
+          ul.pure-menu-list
+            - for (const [path, name] of paths)
+              if path === page
+                li.pure-menu-item.pure-menu-selected
+                  a(href="#").pure-menu-link= name
+              else
+                li.pure-menu-item
+                  a(href=path).pure-menu-link= name
+        .pure-g: .pure-u-1: block content
+      .pure-u-1.pure-u-md-2-24
