@@ -45,3 +45,10 @@ app.get("/", (req, res) => {
     paths: paths
   });
 });
+
+app.get("*", (req, res) => {
+  res.render("404", {
+    page: "/404",
+    paths: paths
+  })
+});
