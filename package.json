@@ -1,0 +1,21 @@
+{
+  "name": "flippeducation",
+  "version": "0.0.0",
+  "description": "Software driving an aggregator website for flipped classroom videos (in beta)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flippeducation/flippeducation.git"
+  },
+  "contributors": [
+    "psvenk"
+  ],
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/flippeducation/flippeducation/issues"
+  },
+  "homepage": "https://github.com/flippeducation/flippeducation#readme"
+}
