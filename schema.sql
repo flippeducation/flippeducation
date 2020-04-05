@@ -154,6 +154,30 @@ CREATE TABLE `topics` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `video_requests`
+--
+
+DROP TABLE IF EXISTS `video_requests`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `video_requests` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `language` char(2) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `lecturer_id` int(10) unsigned DEFAULT NULL,
+  `lecturer_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `lecturer_display_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `topics` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `subjects` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `video_url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `grade_level` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `lecturer_id` (`lecturer_id`),
+  CONSTRAINT `video_requests_ibfk_1` FOREIGN KEY (`lecturer_id`) REFERENCES `lecturers` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `video_topics`
 --
 
@@ -201,4 +225,4 @@ CREATE TABLE `videos` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-04-04 20:26:51
+-- Dump completed on 2020-04-04 21:33:36
