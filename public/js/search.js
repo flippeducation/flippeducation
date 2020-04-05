@@ -3,7 +3,7 @@ let state = {
 };
 
 function showHideAdvancedOptions() {
-  const advancedOptions = document.getElementById("advanced_options");
+  const advancedOptions = document.getElementById("advanced-options");
   const submit1 = document.getElementById("submit1");
   const submit2 = document.getElementById("submit2");
   if (state.advancedOptions) {
