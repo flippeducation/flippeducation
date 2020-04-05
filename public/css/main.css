@@ -1,3 +1,7 @@
 .navbar {
     margin: 1em 0;
 }
+
+.pure-menu-heading {
+    padding-left: 0;
+}
