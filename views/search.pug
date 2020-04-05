@@ -3,18 +3,17 @@ append head
   link(rel="stylesheet" type="text/css" href="/css/search.css")
 block content
   form
-    input(
-      type="search" id="search" name="title"
+    input#search(
+      type="search" name="title"
       placeholder="Enter the title of the video here"
     )
-    input(type="submit" value="Search" id="submit1")
+    input#submit1(type="submit" value="Search")
     br
-    input(
+    input#advanced-options-button(
       type="button" value="Advanced Options"
-      id="advanced-options-button"
       onclick="showHideAdvancedOptions()"
     )
-    section(id="advanced-options")
+    section#advanced-options
       label Language
         select(name="lang")
           option English
@@ -30,5 +29,5 @@ block content
       br
       label Age
           input(type="number" name="age" min="0" max="256")
-    input(type="submit" value="Search" id="submit2")
+    input#submit2(type="submit" value="Search")
   script(src="js/search.js")
