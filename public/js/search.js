@@ -5,16 +5,13 @@ let state = {
 function showHideAdvancedOptions() {
   const advancedOptions = document.getElementById("advanced-options");
   const submit1 = document.getElementById("submit1");
-  const submit2 = document.getElementById("submit2");
   if (state.advancedOptions) {
-    submit1.style.display =  "inline";
-    submit2.style.display = "none";
-    advancedOptions.style.display = "none";
+    submit1.removeAttribute("hidden");
+    advancedOptions.setAttribute("hidden", "");
     state.advancedOptions = false
   } else if (!state.advancedOptions) {
-    submit1.style.display =  "none";
-    submit2.style.display = "inline";
-    advancedOptions.style.display = "block";
+    submit1.setAttribute("hidden", "");
+    advancedOptions.removeAttribute("hidden");
     state.advancedOptions = true
   }
 }
