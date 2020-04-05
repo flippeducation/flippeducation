@@ -2,4 +2,27 @@ extends default
 append head
     link(rel="stylesheet" type="text/css" href="/css/search.css")
 block content
-    input(id="search" name="query" placeholder="Enter the title of the video here")
+    form
+        input(type="search" id="search" name="title" placeholder="Enter the title of the video here")
+        input(type="submit" value="Search" id="submit1")
+        br
+        input(type="button" value="Advanced Options" id="advanced_options_button" onclick="showHideAdvancedOptions()")
+        section(id="advanced_options")
+            label Language
+                select(name="lang")
+                    option English
+            br
+            label Subject
+                select(name="subject")
+                    option Math
+                    option Science
+                    option English
+
+            br
+            label Grade Level
+                input(name="grade_level" placeholder="Grade Level")
+            br
+            label Age
+                input(type="number" name="age" min="0" max="256")
+        input(type="submit" value="Search" id="submit2")
+    script(src="search.js")

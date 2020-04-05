@@ -1,3 +1,11 @@
 #search {
     width: 16em;
 }
+
+#advanced_options {
+    display: none;
+}
+
+#submit2 {
+    display: none;
+}
