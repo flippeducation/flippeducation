@@ -5,3 +5,21 @@
 .navbar {
     margin: 1em 0;
 }
+
+.pure-menu-heading {
+    padding-left: 0;
+}
+
+a {
+    color: #61809b;
+}
+
+a:hover, a:active {
+    color: #167ac6;
+}
+
+.footer {
+    color: #666666;
+    margin: 2em 0;
+    text-align: center;
+}

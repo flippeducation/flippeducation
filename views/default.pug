@@ -14,12 +14,26 @@ html(lang="en-US")
         .pure-g.navbar: .pure-u-1: .pure-menu.pure-menu-horizontal
           a(href="/").pure-menu-heading flippeducation
           ul.pure-menu-list
-            - for (const [path, name] of paths)
-              if path === page
-                li.pure-menu-item.pure-menu-selected
-                  a(href="#").pure-menu-link= name
-              else
-                li.pure-menu-item
-                  a(href=path).pure-menu-link= name
-        .pure-g: .pure-u-1: block content
+            - for (const [path, {navbar, title: tl, navbarTitle}] of pages)
+              if navbar
+                if path === page
+                  li.pure-menu-item.pure-menu-selected
+                    a(href="#").pure-menu-link= tl || navbarTitle
+                else
+                  li.pure-menu-item
+                    a(href=path).pure-menu-link= tl || navbarTitle
+        block content
+        .footer: .pure_g
+          .pure-u-1.pure-u-md-1-3
+            | Licensed under GPLv3+ (
+            if page === "/license"
+              a(href="#") more info
+            else
+              a(href="/license") more info
+            | ).
+          .pure-u-1.pure-u-md-1-3
+            if page === "/privacy"
+              a(href="#") Privacy
+            else
+              a(href="/privacy") Privacy
       .pure-u-1.pure-u-md-2-24

@@ -1,11 +1,11 @@
 const express = require("express");
-const path = require("path");
+const pathLib = require("path");
 
 const app = express();
 const port = 3000;
 
 app.set("view engine", "pug");
-app.set("views", path.join(__dirname, "views"));
+app.set("views", pathLib.join(__dirname, "views"));
 
 app.listen(port, () => console.log(`App listening at http://localhost:${port}`));
 
@@ -26,32 +26,48 @@ new Map([
   ],
 ]).forEach((location, endpoint) => {
   if (location.slice(-1) === "/") app.use(
-      endpoint, express.static(path.join(__dirname, location))
+      endpoint, express.static(pathLib.join(__dirname, location))
   );
   else app.get(endpoint, (req, res) => {
-      res.sendFile(path.join(__dirname, location));
+      res.sendFile(pathLib.join(__dirname, location));
   });
 });
 
-const paths = new Map([
-  ["/", "Home"],
-  ["/search", "Search"],
-  ["/submit", "Submit Videos"]
+const pages = new Map([
+  ["/", {
+    view: "index",
+    title: "",
+    navbar: true,
+    navbarTitle: "Home",
+  }],
+  ["/search", {
+    view: "search",
+    title: "Search",
+    navbar: true
+  }],
+  ["/submit", {
+    view: "submit",
+    title: "Submit Videos",
+    navbar: true
+  }],
+  ["/license", {
+    view: "license",
+    title: "License",
+    navbar: false
+  }],
+  ["/privacy", {
+    view: "privacy",
+    title: "Privacy Policy",
+    navbar: false
+  }],
 ]);
 
-// Map of urls to the corresponding pug file
-const pathToViews = new Map([
-  ["/", "index"],
-  ["/search", "search"],
-  ["/submit", "submit"]
-]);
-
-// Iterate over the map and set express to listen to urls and respond with file in pathToViews
-for (let keyValue of pathToViews){
-  app.get(keyValue[0], (req, res) => {
-    res.render(keyValue[1], {
-      page: keyValue[0],
-      paths: paths
+for (const [path, {view, title,}] of pages) {
+  app.get(path, (req, res) => {
+    res.render(view, {
+      page: path,
+      title: title,
+      pages: pages
     });
   });
 }
@@ -61,6 +77,6 @@ app.use((req, res) => {
   res.render("404", {
     page: "/404",
     title: "404",
-    paths: paths
+    pages: pages
   });
 });
