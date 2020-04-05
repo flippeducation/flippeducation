@@ -39,12 +39,22 @@ const paths = new Map([
   ["/submit", "Submit Videos"]
 ]);
 
-app.get("/", (req, res) => {
-  res.render("index", {
-    page: "/",
-    paths: paths
+// Map of urls to the corresponding pug file
+const pathToViews = new Map([
+  ["/", "index"],
+  ["/search", "search"],
+  ["/submit", "submit"]
+]);
+
+// Iterate over the map and set express to listen to urls and respond with file in pathToViews
+for (let keyValue of pathToViews){
+  app.get(keyValue[0], (req, res) => {
+    res.render(keyValue[1], {
+      page: keyValue[0],
+      paths: paths
+    });
   });
-});
+}
 
 app.get("*", (req, res) => {
   res.render("404", {
