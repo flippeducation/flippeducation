@@ -1,0 +1,12 @@
+.required {
+    color: #aa0000;
+}
+
+.form-control-label, .form-control {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+}
+
+#submit-form-submit {
+    margin-top: 1em;
+}
