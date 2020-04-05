@@ -37,16 +37,29 @@ const pages = new Map([
   ["/", {
     view: "index",
     title: "",
+    navbar: true,
     navbarTitle: "Home",
   }],
   ["/search", {
     view: "search",
-    title: "Search"
+    title: "Search",
+    navbar: true
   }],
   ["/submit", {
     view: "submit",
-    title: "Submit Videos"
-  }]
+    title: "Submit Videos",
+    navbar: true
+  }],
+  ["/license", {
+    view: "license",
+    title: "License",
+    navbar: false
+  }],
+  ["/privacy", {
+    view: "privacy",
+    title: "Privacy Policy",
+    navbar: false
+  }],
 ]);
 
 for (const [path, {view, title,}] of pages) {
