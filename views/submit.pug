@@ -10,8 +10,8 @@ mixin form-control(name, display_name, required, ctrlType, options)
   .pure-u-1-2.pure-u-md-1-4.form-control
     case ctrlType
       when "select": select(id=`submit-form-${name}`)
-        each opt in options
-          option= opt
+        - for ([opt_name, opt_display_name] of options)
+          option(value=opt_name)= `${opt_display_name} (${opt_name})`
       when "textarea": textarea(id=`submit-form-${name}`)
       default: input(
         id=`submit-form-${name}` type=ctrlType name=name
@@ -29,7 +29,9 @@ block content
       )
       +form-control(
         "language", "Language", true, "select",
-        ["English (en)"]
+        [
+          ["en", "English"]
+        ]
       )
       +form-control(
         "lecturer-name", "Lecturer full name", false, "text"
