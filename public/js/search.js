@@ -2,6 +2,11 @@ let state = {
   advancedOptionsToggle: false
 };
 
+window.onload = function hideOnLoad() {
+  const advancedOptions = document.getElementById("advanced-options");
+  advancedOptions.setAttribute("hidden", "");
+};
+
 function showHideAdvancedOptions() {
   const advancedOptions = document.getElementById("advanced-options");
   const submit1 = document.getElementById("submit1");

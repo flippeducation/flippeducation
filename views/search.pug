@@ -13,7 +13,7 @@ block content
       type="button" value="Advanced Options"
       onclick="showHideAdvancedOptions()"
     )
-    #advanced-options(hidden)
+    #advanced-options
       label Language
         select(name="lang")
           option English
@@ -31,4 +31,4 @@ block content
           input(type="number" name="age" min="0" max="256")
       br
       input(type="submit" value="Search")
-  script(src="js/search.js")
+  script(src="js/search.js" defer)
