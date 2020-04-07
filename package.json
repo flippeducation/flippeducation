@@ -19,7 +19,8 @@
     "url": "https://github.com/flippeducation/flippeducation.git"
   },
   "contributors": [
-    "psvenk"
+    "psvenk",
+    "notrodes"
   ],
   "license": "GPL-3.0-or-later",
   "bugs": {
