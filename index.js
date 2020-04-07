@@ -7,7 +7,7 @@ const port = 3000;
 app.set("view engine", "pug");
 app.set("views", pathLib.join(__dirname, "views"));
 
-app.listen(port, () => console.log(`App listening at http://localhost:${port}`));
+app.listen(port, async () => console.log(`App listening at http://localhost:${port}`));
 
 // Expose frontend dependencies from node-modules
 // https://stackoverflow.com/a/27464258
@@ -28,7 +28,7 @@ new Map([
   if (location.slice(-1) === "/") app.use(
       endpoint, express.static(pathLib.join(__dirname, location))
   );
-  else app.get(endpoint, (req, res) => {
+  else app.get(endpoint, async (req, res) => {
       res.sendFile(pathLib.join(__dirname, location));
   });
 });
@@ -63,7 +63,7 @@ const pages = new Map([
 ]);
 
 for (const [path, {view, title,}] of pages) {
-  app.get(path, (req, res) => {
+  app.get(path, async (req, res) => {
     res.render(view, {
       page: path,
       title: title,
@@ -72,7 +72,7 @@ for (const [path, {view, title,}] of pages) {
   });
 }
 
-app.use((req, res) => {
+app.use(async (req, res) => {
   res.status(404);
   res.render("404", {
     page: "/404",
