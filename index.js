@@ -9,6 +9,13 @@ const bodyParser = require("body-parser");
 // The file .env is in .gitignore and so should not be committed.
 require("dotenv").config();
 
+// Global variable to store whether or not a database connection
+// has been established
+let database = false;
+
+// Database connection pool
+let pool;
+
 const app = express();
 const port = 3000;
 
@@ -84,35 +91,48 @@ for (const [path, {view, title,}] of pages) {
   });
 }
 
-// Create database connection pool if username and password are given
-let pool;
-if (process.env.DB_USER && process.env.DB_PWD) {
-  pool = mariadb.createPool({
-    host: process.env.DB_HOST || "localhost",
-    user: process.env.DB_USER,
-    password: process.env.DB_PWD,
-    connectionLimit: 5
-  });
-}
-else {
-  console.error("Proceeding without database connection");
-}
-
-app.post("/submit", async (req, res) => {
+// Create database connection pool if username and password are given.
+// Async IIFE is used so that await can be used
+(async () => {
   let conn;
-  let success = false;
   try {
+    if (!(process.env.DB_USER && process.env.DB_PWD)) {
+      throw "No credentials provided";
+    }
+    pool = mariadb.createPool({
+      host: process.env.DB_HOST || "localhost",
+      user: process.env.DB_USER,
+      password: process.env.DB_PWD,
+      connectionLimit: 5
+    });
     conn = await pool.getConnection();
-    console.log(req.body);
-    success = true;
+    database = true;
   }
   catch (err) {
-    console.error("Error at /submit endpoint");
+    console.error("Proceeding without database connection");
   }
   finally {
     if (conn) conn.release();
-    res.redirect(`/?success=${success}`);
   }
+})();
+
+app.post("/submit", async (req, res) => {
+  let success = "No database connection";
+  if (database) {
+    let conn;
+    try {
+      conn = await pool.getConnection();
+      console.log(req.body);
+      success = "true";
+    }
+    catch (err) {
+      success = "Error connecting to database";
+    }
+    finally {
+      if (conn) conn.release();
+    }
+  }
+  res.redirect(`/?success=${success}`);
 });
 
 app.use(async (req, res) => {
