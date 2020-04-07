@@ -78,7 +78,8 @@ for (const [path, {view, title,}] of pages) {
     res.render(view, {
       page: path,
       title: title,
-      pages: pages
+      pages: pages,
+      success: req.query.success || ""
     });
   });
 }
@@ -99,17 +100,19 @@ else {
 
 app.post("/submit", async (req, res) => {
   let conn;
+  let success = false;
   try {
     conn = await pool.getConnection();
     console.log(req.body);
+    success = true;
   }
   catch (err) {
     console.error("Error at /submit endpoint");
   }
   finally {
     if (conn) conn.release();
+    res.redirect(`/?success=${success}`);
   }
-  res.redirect("/");
 });
 
 app.use(async (req, res) => {

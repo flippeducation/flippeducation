@@ -6,6 +6,9 @@ nav {
     margin: 1em 0;
 }
 
+.pure-g.flash {
+    background-color: rgb(66, 184, 221);
+}
 
 .main {
     padding: 0.5em 1.5em;
