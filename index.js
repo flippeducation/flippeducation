@@ -28,7 +28,7 @@ app.set("views", pathLib.join(__dirname, "views"));
 app.use(bodyParser.urlencoded({ extended: false }));
 // https://stackoverflow.com/a/38763341
 
-app.listen(port, async () => console.log(`App listening at http://localhost:${port}`));
+app.listen(port, () => console.log(`App listening at http://localhost:${port}`));
 
 // Expose frontend dependencies from node-modules
 // https://stackoverflow.com/a/27464258
@@ -49,7 +49,7 @@ new Map([
   if (location.slice(-1) === "/") app.use(
       endpoint, express.static(pathLib.join(__dirname, location))
   );
-  else app.get(endpoint, async (req, res) => {
+  else app.get(endpoint, (req, res) => {
       res.sendFile(pathLib.join(__dirname, location));
   });
 });
@@ -152,7 +152,7 @@ ${JSON.stringify(req.body)}
   res.redirect(`/?success=${success}`);
 });
 
-app.use(async (req, res) => {
+app.use((req, res) => {
   res.status(404);
   res.render("404", {
     page: "/404",
