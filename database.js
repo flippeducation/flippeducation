@@ -6,14 +6,8 @@ const mariadb = require("mariadb");
 // The file .env is in .gitignore and so should not be committed.
 require("dotenv").config();
 
-module.exports = {
-  get enabled() { return enabled; },
-  init,
-  recordSubmission
-};
-
 // Whether or not a database connection has been established
-var enabled = false;
+let enabled = false;
 
 // Database connection pool
 let pool;
@@ -61,3 +55,9 @@ async function recordSubmission(body) {
     if (conn) conn.release();
   }
 }
+
+module.exports = {
+  get enabled() { return enabled; },
+  init,
+  recordSubmission
+};
