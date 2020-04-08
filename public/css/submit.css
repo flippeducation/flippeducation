@@ -10,3 +10,8 @@
 #submit-form-submit {
     margin-top: 1em;
 }
+
+#submit-form-phone-number,
+label[for=submit-form-phone-number] {
+    display: none !important;
+}

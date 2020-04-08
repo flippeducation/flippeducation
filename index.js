@@ -2,6 +2,7 @@ const express = require("express");
 const pathLib = require("path");
 const mariadb = require("mariadb");
 const bodyParser = require("body-parser");
+const fs = require("fs");
 
 // Allow environment variables to be passed from a file called ".env"---
 // this is so that database credentials (DB_USER and DB_PWD)
@@ -15,6 +16,8 @@ let database = false;
 
 // Database connection pool
 let pool;
+
+const logfile = pathLib.join(__dirname, "flippeducation.log");
 
 const app = express();
 const port = 3000;
@@ -118,6 +121,20 @@ for (const [path, {view, title,}] of pages) {
 
 app.post("/submit", async (req, res) => {
   let success = "No database connection";
+  if (req.body.phone_number) {
+    try {
+      fs.appendFileSync(logfile, `
+SPAM DETECTED at ${new Date()}:
+${JSON.stringify(req.body)}
+`);
+    }
+    catch (err) {
+      console.error("Error writing data to logfile");
+      console.error(err);
+    }
+    res.redirect("/?success=true");
+    return;
+  }
   if (database) {
     let conn;
     try {
