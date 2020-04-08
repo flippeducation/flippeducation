@@ -25,7 +25,7 @@ const port = 3000;
 app.set("view engine", "pug");
 app.set("views", pathLib.join(__dirname, "views"));
 
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 // https://stackoverflow.com/a/38763341
 
 app.listen(port, () => console.log(`App listening at http://localhost:${port}`));
@@ -33,111 +33,130 @@ app.listen(port, () => console.log(`App listening at http://localhost:${port}`))
 // Expose frontend dependencies from node-modules
 // https://stackoverflow.com/a/27464258
 new Map([
-    [
-        "/",
-        "/public/"
-    ],
-    [
-        "/css/pure-min.css",
-        "/node_modules/purecss/build/pure-min.css"
-    ],
-    [
-        "/css/grids-responsive-min.css",
-        "/node_modules/purecss/build/grids-responsive-min.css"
-    ],
+  [
+    "/",
+    "/public/"
+  ],
+  [
+    "/css/pure-min.css",
+    "/node_modules/purecss/build/pure-min.css"
+  ],
+  [
+    "/css/grids-responsive-min.css",
+    "/node_modules/purecss/build/grids-responsive-min.css"
+  ],
 ]).forEach((location, endpoint) => {
-    if (location.slice(-1) === "/") app.use(
-        endpoint, express.static(pathLib.join(__dirname, location))
-    );
-    else app.get(endpoint, (req, res) => {
-        res.sendFile(pathLib.join(__dirname, location));
-    });
+  if (location.slice(-1) === "/") app.use(
+      endpoint, express.static(pathLib.join(__dirname, location))
+  );
+  else app.get(endpoint, (req, res) => {
+      res.sendFile(pathLib.join(__dirname, location));
+  });
 });
 
 const pages = new Map([
-    ["/", {
-        view: "index",
-        title: "",
-        navbar: true,
-        navbarTitle: "Home",
-    }],
-    ["/search", {
-        view: "search",
-        title: "Search",
-        navbar: true
-    }],
-    ["/submit", {
-        view: "submit",
-        title: "Submit Videos",
-        navbar: true
-    }],
-    ["/license", {
-        view: "license",
-        title: "License",
-        navbar: false
-    }],
-    ["/privacy", {
-        view: "privacy",
-        title: "Privacy Policy",
-        navbar: false
-    }],
+  ["/", {
+    view: "index",
+    title: "",
+    navbar: true,
+    navbarTitle: "Home",
+  }],
+  ["/search", {
+    view: "search",
+    title: "Search",
+    navbar: true
+  }],
+  ["/submit", {
+    view: "submit",
+    title: "Submit Videos",
+    navbar: true
+  }],
+  ["/license", {
+    view: "license",
+    title: "License",
+    navbar: false
+  }],
+  ["/privacy", {
+    view: "privacy",
+    title: "Privacy Policy",
+    navbar: false
+  }],
 ]);
 
 for (const [path, {view, title,}] of pages) {
-    app.get(path, async (req, res) => {
-        res.render(view, {
-            page: path,
-            title: title,
-            pages: pages,
-            success: req.query.success || ""
-        });
+  app.get(path, async (req, res) => {
+    res.render(view, {
+      page: path,
+      title: title,
+      pages: pages,
+      success: req.query.success || ""
     });
+  });
 }
 
 // Create database connection pool if username and password are given.
-if (process.env.DB_USER && process.env.DB_PWD) {
-    let database;
+// Async IIFE is used so that await can be used
+(async () => {
+  let conn;
+  try {
+    if (!(process.env.DB_USER && process.env.DB_PWD)) {
+      throw "No credentials provided";
+    }
     pool = mariadb.createPool({
-        host: process.env.DB_HOST || "localhost",
-        user: process.env.DB_USER,
-        password: process.env.DB_PWD,
-        connectionLimit: 5
+      host: process.env.DB_HOST || "localhost",
+      user: process.env.DB_USER,
+      password: process.env.DB_PWD,
+      connectionLimit: 5
     });
-    pool.getConnection()
-        .then(conn => {
-            database = true;
-            conn.release();
-        })
-        .catch(() => console.error("Proceeding without database connection"));
-} else {
-    console.error("No credentials provided")
-}
+    conn = await pool.getConnection();
+    database = true;
+  }
+  catch (err) {
+    console.error("Proceeding without database connection");
+  }
+  finally {
+    if (conn) conn.release();
+  }
+})();
 
-app.post("/submit", (req, res) => {
-    let success = "No database connection";
-    if (req.body.phone_number) {
-        fs.appendFile(logfile, `\nSPAM DETECTED at ${new Date()}:\n${JSON.stringify(req.body)}`)
-            .catch(err => console.error(`Error writing data to logfile\n${err}`));
-        res.redirect("/?success=true");
-        return;
+app.post("/submit", async (req, res) => {
+  let success = "No database connection";
+  if (req.body.phone_number) {
+    try {
+      fs.appendFileSync(logfile, `
+SPAM DETECTED at ${new Date()}:
+${JSON.stringify(req.body)}
+`);
     }
-    if (database) {
-        pool.getConnection()
-            .then(conn => {
-                console.log(req.body);
-                success = "true";
-                conn.release()
-            })
-            .catch(() => success = "Error connecting to database")
-        res.redirect(`/?success=${success}`);
+    catch (err) {
+      console.error("Error writing data to logfile");
+      console.error(err);
     }
+    res.redirect("/?success=true");
+    return;
+  }
+  if (database) {
+    let conn;
+    try {
+      conn = await pool.getConnection();
+      console.log(req.body);
+      success = "true";
+    }
+    catch (err) {
+      success = "Error connecting to database";
+    }
+    finally {
+      if (conn) conn.release();
+    }
+  }
+  res.redirect(`/?success=${success}`);
 });
 
 app.use((req, res) => {
-    res.status(404);
-    res.render("404", {
-        page: "/404",
-        title: "404",
-        pages: pages
-    });
+  res.status(404);
+  res.render("404", {
+    page: "/404",
+    title: "404",
+    pages: pages
+  });
 });
