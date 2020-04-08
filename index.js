@@ -1,21 +1,9 @@
 const express = require("express");
-const pathLib = require("path");
-const mariadb = require("mariadb");
 const bodyParser = require("body-parser");
+const pathLib = require("path");
 const fsp = require("fs").promises;
 
-// Allow environment variables to be passed from a file called ".env"---
-// this is so that database credentials (DB_USER and DB_PWD)
-// can be stored for convenience.
-// The file .env is in .gitignore and so should not be committed.
-require("dotenv").config();
-
-// Global variable to store whether or not a database connection
-// has been established
-let database = false;
-
-// Database connection pool
-let pool;
+const database = require("./database.js");
 
 const logfile = pathLib.join(__dirname, "flippeducation.log");
 
@@ -94,61 +82,34 @@ for (const [path, {view, title,}] of pages) {
   });
 }
 
-// Create database connection pool if username and password are given.
-// Async IIFE is used so that await can be used
-(async () => {
-  let conn;
+database.init().catch(err => console.error(err));
+
+async function logSpam(body) {
   try {
-    if (!(process.env.DB_USER && process.env.DB_PWD)) {
-      throw "No credentials provided";
-    }
-    pool = mariadb.createPool({
-      host: process.env.DB_HOST || "localhost",
-      user: process.env.DB_USER,
-      password: process.env.DB_PWD,
-      connectionLimit: 5
-    });
-    conn = await pool.getConnection();
-    database = true;
+    await fsp.appendFile(logfile,
+      `SPAM DETECTED at ${new Date()}:\n` +
+      `${JSON.stringify(body)}\n`
+    );
   }
   catch (err) {
-    console.error("Proceeding without database connection");
+    console.error(`Error writing data to logfile:\n${err}`);
   }
-  finally {
-    if (conn) conn.release();
-  }
-})();
+}
 
 app.post("/submit", async (req, res) => {
-  let success = "No database connection";
-  if (req.body.phone_number) {
-    try {
-      await fsp.appendFile(logfile,
-        `SPAM DETECTED at ${new Date()}:\n` +
-        `${JSON.stringify(req.body)}\n`
-      );
-    }
-    catch (err) {
-      console.error(`Error writing data to logfile:\n${err}`);
-    }
+  try {
+    await database.recordSubmission(req.body);
     res.redirect("/?success=true");
-    return;
   }
-  if (database) {
-    let conn;
-    try {
-      conn = await pool.getConnection();
-      console.log(req.body);
-      success = "true";
+  catch (err) {
+    if (err === "Spam detected") {
+      await logSpam(req.body);
+      res.redirect("/?success=true");
     }
-    catch (err) {
-      success = "Error connecting to database";
-    }
-    finally {
-      if (conn) conn.release();
+    else {
+      res.redirect(`/?success=${err}`);
     }
   }
-  res.redirect(`/?success=${success}`);
 });
 
 app.use((req, res) => {
