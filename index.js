@@ -2,7 +2,7 @@ const express = require("express");
 const pathLib = require("path");
 const mariadb = require("mariadb");
 const bodyParser = require("body-parser");
-const fs = require("fs");
+const fsp = require("fs").promises;
 
 // Allow environment variables to be passed from a file called ".env"---
 // this is so that database credentials (DB_USER and DB_PWD)
@@ -123,10 +123,10 @@ app.post("/submit", async (req, res) => {
   let success = "No database connection";
   if (req.body.phone_number) {
     try {
-      fs.appendFileSync(logfile, `
-SPAM DETECTED at ${new Date()}:
-${JSON.stringify(req.body)}
-`);
+      await fsp.appendFile(logfile,
+        `SPAM DETECTED at ${new Date()}:\n` +
+        `${JSON.stringify(req.body)}\n`
+      );
     }
     catch (err) {
       console.error("Error writing data to logfile");
