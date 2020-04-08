@@ -129,8 +129,7 @@ app.post("/submit", async (req, res) => {
       );
     }
     catch (err) {
-      console.error("Error writing data to logfile");
-      console.error(err);
+      console.error(`Error writing data to logfile:\n${err}`);
     }
     res.redirect("/?success=true");
     return;
