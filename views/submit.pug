@@ -1,6 +1,6 @@
 extends default
 
-mixin form-control(name, display_name, required, ctrlType, options)
+mixin form-control(name, display_name, required, ctrlType, autocomplete="on", options=[])
   .pure-u-1-2.pure-u-md-1-4.form-control-label
     label(for=`submit-form-${name}`)
       =display_name
@@ -10,15 +10,22 @@ mixin form-control(name, display_name, required, ctrlType, options)
   .pure-u-1-2.pure-u-md-1-4.form-control
     case ctrlType
       when "select"
-        select(id=`submit-form-${name}` name=name.replace(/-/g, "_"))
+        select(
+          id=`submit-form-${name}` name=name.replace(/-/g, "_")
+          autocomplete=autocomplete
+        )
           - for ([opt_name, opt_display_name] of options)
             option(value=opt_name.replace("-", "_"))
               = `${opt_display_name} (${opt_name})`
       when "textarea"
-        textarea(id=`submit-form-${name}` name=name.replace(/-/g, "_"))
+        textarea(
+          id=`submit-form-${name}` name=name.replace(/-/g, "_")
+          autocomplete=autocomplete
+        )
       default: input(
         id=`submit-form-${name}` type=ctrlType
         name=name.replace(/-/g, "_")
+        autocomplete=autocomplete
       )
   .pure-u-md-1-2
 
@@ -32,17 +39,18 @@ block content
         "name", "Video name", true, "text"
       )
       +form-control(
-        "language", "Language", true, "select",
-        [
+        "language", "Language", true, "select", autocomplete="language",
+        options=[
           ["en", "English"]
         ]
       )
       +form-control(
-        "lecturer-name", "Lecturer full name", false, "text"
+        "lecturer-name", "Lecturer full name", false, "text",
+        autocomplete="name"
       )
       +form-control(
         "lecturer-display-name", "Lecturer display name (must be unique)",
-        true, "text"
+        true, "text", autocomplete="username"
       )
       +form-control(
         "topics", "Topic(s) (e.g. partial fractions)", false, "text"
@@ -51,7 +59,7 @@ block content
         "subjects", "Subject(s) (e.g. calculus, AP Calculus BC)", false, "text"
       )
       +form-control(
-        "url", "Video URL", true, "text"
+        "url", "Video URL", true, "text", autocomplete="url"
       )
       +form-control(
         "grade-level", "Grade level / experience level", false, "text"

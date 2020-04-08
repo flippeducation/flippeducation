@@ -6,7 +6,7 @@ nav {
     margin: 1em 0;
 }
 
-.pure-g.flash {
+.flash {
     background-color: rgb(66, 184, 221);
 }
 
@@ -27,4 +27,3 @@ a:hover, a:active {
     margin: 2em 0;
     text-align: center;
 }
-
