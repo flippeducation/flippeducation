@@ -8,12 +8,13 @@ html(lang="en-US")
     link(rel="stylesheet" type="text/css" href="/css/grids-responsive-min.css")
     link(rel="stylesheet" type="text/css" href="/css/main.css")
   body
-    if success
+    if query.success
+      - let succ = query.success
       .pure-g.flash
         .pure-u-1.pure-u-md-2-24
         .pure-u-1.pure-u-md-20-24.main.
           Video submission
-          #{success === "true" ? "successful" : `unsuccessful: ${success}`}.
+          #{succ === "true" ? "successful" : `unsuccessful: ${succ}`}.
         .pure-u-1.pure-u-md-2-24
     .pure-g
       .pure-u-1.pure-u-md-2-24
@@ -23,7 +24,7 @@ html(lang="en-US")
           ul.pure-menu-list
             - for (const [path, {navbar, title: tl, navbarTitle}] of pages)
               if navbar
-                if path === page && !success
+                if path === page && !query.success
                   li.pure-menu-item.pure-menu-selected
                     a.pure-menu-link(href="#")= tl || navbarTitle
                 else

@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const pathLib = require("path");
 const fsp = require("fs").promises;
+const querystring = require("querystring");
 
 const database = require("./database.js");
 
@@ -77,7 +78,7 @@ for (const [path, {view, title,}] of pages) {
       page: path,
       title: title,
       pages: pages,
-      success: req.query.success || ""
+      query: req.query
     });
   });
 }
@@ -102,9 +103,14 @@ app.post("/submit", async (req, res) => {
     res.redirect("/?success=true");
   }
   catch (err) {
-    if (err === "Spam detected") {
+    if (err.includes("Spam")) {
       await logSpam(req.body);
       res.redirect("/?success=true");
+    }
+    else if (err.includes("Not all required")) {
+      res.redirect(`/submit?success=${err}&${
+        querystring.stringify(req.body)
+      }`);
     }
     else {
       res.redirect(`/?success=${err}`);

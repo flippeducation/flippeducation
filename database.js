@@ -43,6 +43,12 @@ async function recordSubmission(body) {
   if (body.phone_number) {
     throw "Spam detected";
   }
+  // Check if all required fields are filled in
+  if (!([
+    "name", "language", "lecturer_display_name", "url"
+  ].every(key => body[key]))) {
+    throw "Not all required fields are filled in";
+  }
   let conn;
   try {
     conn = await pool.getConnection();
