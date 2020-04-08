@@ -113,13 +113,13 @@ DROP TABLE IF EXISTS `submissions`;
 CREATE TABLE `submissions` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `language` char(2) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `language` char(2) COLLATE utf8mb4_unicode_ci NOT NULL,
   `lecturer_id` int(10) unsigned DEFAULT NULL,
   `lecturer_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `lecturer_display_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `lecturer_display_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `topics` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `subjects` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `video_url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `url` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `grade_level` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `notes` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -209,12 +209,12 @@ DROP TABLE IF EXISTS `videos`;
 CREATE TABLE `videos` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `language` char(2) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `language` char(2) COLLATE utf8mb4_unicode_ci NOT NULL,
   `lecturer_id` int(10) unsigned NOT NULL,
-  `video_url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `url` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `grade_level` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `video_url` (`video_url`),
+  UNIQUE KEY `video_url` (`url`) USING HASH,
   KEY `lecturer_id` (`lecturer_id`),
   CONSTRAINT `videos_ibfk_1` FOREIGN KEY (`lecturer_id`) REFERENCES `lecturers` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -229,4 +229,4 @@ CREATE TABLE `videos` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-04-05 14:05:14
+-- Dump completed on 2020-04-08 19:12:44
