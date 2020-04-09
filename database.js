@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 const mariadb = require("mariadb");
 
 // Allow environment variables to be passed from a file called ".env"---

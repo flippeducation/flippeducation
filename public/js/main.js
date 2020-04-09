@@ -1,3 +1,5 @@
+"use strict";
+
 /*
 The following code is adapted from
 the Responsive Horizontal-to-Vertical Menu code found at
