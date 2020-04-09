@@ -7,13 +7,15 @@ const querystring = require("querystring");
 
 const database = require("./database.js");
 
-const logfile = pathLib.join(__dirname, "flippeducation.log");
+const rootdir = pathLib.dirname(__dirname);
+
+const logfile = pathLib.join(rootdir, "flippeducation.log");
 
 const app = express();
 const port = 3000;
 
 app.set("view engine", "pug");
-app.set("views", pathLib.join(__dirname, "views"));
+app.set("views", pathLib.join(rootdir, "views"));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 // https://stackoverflow.com/a/38763341
@@ -37,10 +39,10 @@ new Map([
   ],
 ]).forEach((location, endpoint) => {
   if (location.slice(-1) === "/") app.use(
-      endpoint, express.static(pathLib.join(__dirname, location))
+      endpoint, express.static(pathLib.join(rootdir, location))
   );
   else app.get(endpoint, (req, res) => {
-      res.sendFile(pathLib.join(__dirname, location));
+      res.sendFile(pathLib.join(rootdir, location));
   });
 });
 
