@@ -88,8 +88,8 @@ database.init().catch(err => console.error(err));
 async function logSpam(body) {
   try {
     await fsp.appendFile(logfile,
-      `SPAM DETECTED at ${new Date()}:\n` +
-      `${JSON.stringify(body)}\n`
+      `SPAM DETECTED at ${new Date()}:\n`
+      + `${JSON.stringify(body)}\n`
     );
   }
   catch (err) {

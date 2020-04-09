@@ -23,7 +23,9 @@ async function init() {
       host: process.env.DB_HOST || "localhost",
       user: process.env.DB_USER,
       password: process.env.DB_PWD,
-      connectionLimit: 5
+      database: process.env.DB_DATABASE || "flippeducation",
+      connectionLimit: 5,
+      namedPlaceholders: true
     });
     conn = await pool.getConnection();
     enabled = true;
@@ -52,7 +54,14 @@ async function recordSubmission(body) {
   let conn;
   try {
     conn = await pool.getConnection();
-    console.log(body); // FIXME
+    await conn.query("SET sql_mode=EMPTY_STRING_IS_NULL;")
+    await conn.query(
+      `INSERT INTO submissions (name, language, lecturer_name,
+      lecturer_display_name, topics, subjects, url, grade_level, notes)
+      VALUES (:name, :language, :lecturer_name, :lecturer_display_name,
+      :topics, :subjects, :url, :grade_level, :notes);`,
+      body
+    );
   }
   catch (err) {
     throw "Error connecting to database";
