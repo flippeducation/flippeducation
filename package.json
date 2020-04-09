@@ -2,9 +2,9 @@
   "name": "flippeducation",
   "version": "0.0.0",
   "description": "Software driving an aggregator website for flipped classroom videos (in beta)",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node src/index.js"
   },
   "dependencies": {
     "dotenv": "^8.2.0",
