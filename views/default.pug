@@ -19,17 +19,21 @@ html(lang="en-US")
     .pure-g
       .pure-u-1.pure-u-md-2-24
       .pure-u-1.pure-u-md-20-24.main
-        nav.pure-g: .pure-u-1: .pure-menu.pure-menu-horizontal
-          a.pure-menu-heading(href="/") flippeducation
-          ul.pure-menu-list
-            - for (const [path, {navbar, title: tl, navbarTitle}] of pages)
-              if navbar
-                if path === page && !(query && query.success)
-                  li.pure-menu-item.pure-menu-selected
-                    a.pure-menu-link(href="#")= tl || navbarTitle
-                else
-                  li.pure-menu-item
-                    a.pure-menu-link(href=path)= tl || navbarTitle
+        nav.custom-wrapper.pure-g#menu: .pure-u-1
+          .pure-menu.pure-menu-horizontal.custom-can-transform
+            a.pure-menu-heading.custom-brand(href="/") flippeducation
+            a.custom-toggle#toggle
+              s.bar
+              s.bar
+            ul.pure-menu-list#menu-items
+              - for (const [path, {navbar, title: tl, navbarTitle}] of pages)
+                if navbar
+                  if path === page && !(query && query.success)
+                    li.pure-menu-item.pure-menu-selected
+                      a.pure-menu-link(href="#")= tl || navbarTitle
+                  else
+                    li.pure-menu-item
+                      a.pure-menu-link(href=path)= tl || navbarTitle
         block content
         .footer: .pure_g
           .pure-u-1.pure-u-md-1-3
@@ -45,3 +49,4 @@ html(lang="en-US")
             else
               a(href="/privacy") Privacy
       .pure-u-1.pure-u-md-2-24
+    script(src="js/main.js")
