@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const pathLib = require("path");
 const fsp = require("fs").promises;
 const querystring = require("querystring");
+const i18n = require("i18n");
 
 const database = require("./database.js");
 
@@ -19,6 +20,9 @@ app.set("views", pathLib.join(rootdir, "views"));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 // https://stackoverflow.com/a/38763341
+
+i18n.configure({ directory: pathLib.join(rootdir, "locales") });
+app.use(i18n.init);
 
 app.listen(port, () => console.log(`App listening at http://localhost:${port}`));
 
@@ -66,22 +70,50 @@ const pages = new Map([
   ["/license", {
     view: "license",
     title: "License",
-    navbar: false
+    navbar: false,
+    localized: true
   }],
   ["/privacy", {
     view: "privacy",
     title: "Privacy Policy",
-    navbar: false
+    navbar: false,
+    localized: true
   }],
 ]);
 
-for (const [path, {view, title,}] of pages) {
+for (const [path, {view, title, localized}] of pages) {
+  if (localized) {
+    app.get(path, async (req, res) => {
+      try {
+        // Check if localized view file is accessible
+        await fsp.access(pathLib.join(rootdir,
+          `views/${view}_${req.getLocale()}.pug`
+        ));
+        res.render(`${view}_${req.getLocale()}`, {
+          page: path,
+          title: title,
+          pages: pages,
+          query: req.query
+        });
+      }
+      catch (err) {
+        // Render English version (fallback)
+        res.render(`${view}_en`, {
+          page: path,
+          title: title,
+          pages: pages,
+          query: req.query
+        });
+      }
+    });
+  }
   app.get(path, async (req, res) => {
     res.render(view, {
       page: path,
       title: title,
       pages: pages,
-      query: req.query
+      query: req.query,
+      __: req.__
     });
   });
 }

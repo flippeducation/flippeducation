@@ -5,27 +5,27 @@ block content
   form
     input#search(
       type="search" name="title"
-      placeholder="Enter the title of the video here"
+      placeholder=__("Enter the title of the video here")
     )
-    input#submit1(type="submit" value="Search")
+    input#submit1(type="submit" value=__("Search"))
     br
     input#advanced-options-button(
-      type="button" value="Advanced Options"
+      type="button" value=__("Advanced Options")
       onclick="showHideAdvancedOptions()"
     )
     #advanced-options
-      label Language
+      label= __("Language")
         select(name="lang")
           option English
       br
-      label Subject
+      label= __("Subject")
         select(name="subject")
           option Math
           option Science
           option English
       br
-      label Grade Level
-          input(name="grade-level" placeholder="Grade Level")
+      label= __("Grade level")
+          input(name="grade-level" placeholder=__("Grade level"))
       br
       label Age
           input(type="number" name="age" min="0" max="256")
