@@ -1,4 +1,5 @@
 import mariadb = require("mariadb");
+import { SubmissionBody } from "./types";
 
 // Allow environment variables to be passed from a file called ".env"---
 // this is so that database credentials (DB_USER and DB_PWD)
@@ -41,7 +42,7 @@ async function init() {
   }
 }
 
-async function recordSubmission(body) {
+async function recordSubmission(body: SubmissionBody) {
   if (!state.isEstablished) {
     throw "No database connection";
   }
@@ -49,12 +50,13 @@ async function recordSubmission(body) {
     throw "Spam detected";
   }
   // Check if all required fields are filled in
-  if (!([
+  const requiredFields: (keyof SubmissionBody)[] = [
     "name", "language", "lecturer_display_name", "url"
-  ].every(key => body[key]))) {
+  ];
+  if (!(requiredFields.every(key => body[key]))) {
     throw "Not all required fields are filled in";
   }
-  let conn;
+  let conn: mariadb.PoolConnection;
   try {
     conn = await pool.getConnection();
     await conn.query("SET sql_mode=EMPTY_STRING_IS_NULL;")

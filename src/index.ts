@@ -7,6 +7,7 @@ import querystring = require("querystring");
 import i18n = require("i18n");
 
 import database = require("./database");
+import { Pages, SubmissionBody } from "./types";
 
 const rootdir = pathLib.dirname(__dirname);
 
@@ -50,7 +51,7 @@ new Map([
   });
 });
 
-const pages = new Map([
+const pages: Pages = new Map([
   ["/", {
     view: "index",
     title: "",
@@ -120,7 +121,7 @@ for (const [path, {view, title, localized}] of pages) {
 
 database.init().catch(err => console.error(err));
 
-async function logSpam(body) {
+async function logSpam(body: SubmissionBody) {
   try {
     await fsp.appendFile(logfile,
       `SPAM DETECTED at ${new Date()}:\n`
