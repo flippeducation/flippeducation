@@ -1,7 +1,7 @@
 extends default
 
 mixin form-control(name, display_name, required, ctrlType, autocomplete="on", options=[])
-  - let jsName = name.replace(/-/g, "_")
+  - const jsName = name.replace(/-/g, "_")
   .pure-u-1-2.pure-u-md-1-4.form-control-label
     label(for=`submit-form-${name}`)
       =display_name

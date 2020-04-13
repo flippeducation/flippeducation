@@ -7,8 +7,11 @@ const mariadb = require("mariadb");
 // The file .env is in .gitignore and so should not be committed.
 require("dotenv").config();
 
-// Whether or not a database connection has been established
-let enabled = false;
+// Holds all global mutable variables
+const state = {
+  // Whether or not a database connection has been established
+  isEstablished: false
+};
 
 // Database connection pool
 let pool;
@@ -29,7 +32,7 @@ async function init() {
       namedPlaceholders: true
     });
     conn = await pool.getConnection();
-    enabled = true;
+    state.isEstablished = true;
   }
   catch (err) {
     throw `Error connecting to database.\n${err}`;
@@ -40,7 +43,7 @@ async function init() {
 }
 
 async function recordSubmission(body) {
-  if (!enabled) {
+  if (!state.isEstablished) {
     throw "No database connection";
   }
   if (body.phone_number) {
@@ -73,7 +76,7 @@ async function recordSubmission(body) {
 }
 
 module.exports = {
-  get enabled() { return enabled; },
+  get enabled() { return state.isEstablished; },
   init,
   recordSubmission
 };
