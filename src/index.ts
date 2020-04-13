@@ -1,12 +1,12 @@
-"use strict";
-const express = require("express");
-const bodyParser = require("body-parser");
-const pathLib = require("path");
-const fsp = require("fs").promises;
-const querystring = require("querystring");
-const i18n = require("i18n");
+import express = require("express");
+import bodyParser = require("body-parser");
+import pathLib = require("path");
+import fs = require("fs");
+const fsp = fs.promises;
+import querystring = require("querystring");
+import i18n = require("i18n");
 
-const database = require("./database.js");
+import database = require("./database");
 
 const rootdir = pathLib.dirname(__dirname);
 

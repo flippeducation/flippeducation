@@ -2,18 +2,24 @@
   "name": "flippeducation",
   "version": "0.0.0",
   "description": "Software driving an aggregator website for flipped classroom videos (in beta)",
-  "main": "src/index.js",
+  "main": "js/index.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node js/index.js",
+    "tsc": "tsc",
+    "prestart": "tsc"
   },
   "dependencies": {
+    "@types/express": "^4.17.6",
+    "@types/i18n": "^0.8.6",
+    "@types/node": "^13.11.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "i18n": "^0.8.6",
     "jstransformer-markdown-it": "^2.1.0",
     "mariadb": "^2.3.1",
     "pug": "^2.0.4",
-    "purecss": "^1.0.1"
+    "purecss": "^1.0.1",
+    "typescript": "^3.8.3"
   },
   "repository": {
     "type": "git",

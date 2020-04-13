@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "CommonJS",
+    "alwaysStrict": true,
+    "outDir": "js"
+  },
+  "include": [
+    "node_modules/mariadb/types"
+  ]
+}

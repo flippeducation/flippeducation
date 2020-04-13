@@ -1,5 +1,4 @@
-"use strict";
-const mariadb = require("mariadb");
+import mariadb = require("mariadb");
 
 // Allow environment variables to be passed from a file called ".env"---
 // this is so that database credentials (DB_USER and DB_PWD)
@@ -14,14 +13,14 @@ const state = {
 };
 
 // Database connection pool
-let pool;
+let pool: mariadb.Pool;
 
 // Create database connection pool
 async function init() {
   if (!(process.env.DB_USER && process.env.DB_PWD)) {
     throw "No database credentials provided";
   }
-  let conn;
+  let conn: mariadb.PoolConnection;
   try {
     pool = mariadb.createPool({
       host: process.env.DB_HOST || "localhost",
@@ -75,7 +74,7 @@ async function recordSubmission(body) {
   }
 }
 
-module.exports = {
+export = {
   get enabled() { return state.isEstablished; },
   init,
   recordSubmission
