@@ -3,10 +3,12 @@
     "target": "ESNext",
     "module": "CommonJS",
     "alwaysStrict": true,
+    "rootDir": "src",
     "outDir": "js",
     "strictNullChecks": true
   },
   "include": [
+    "src",
     "node_modules/mariadb/types"
   ]
 }

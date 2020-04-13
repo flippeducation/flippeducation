@@ -21,7 +21,7 @@ async function init() {
   if (!(process.env.DB_USER && process.env.DB_PWD)) {
     throw "No database credentials provided";
   }
-  let conn: mariadb.PoolConnection;
+  let conn: mariadb.PoolConnection | undefined;
   try {
     pool = mariadb.createPool({
       host: process.env.DB_HOST || "localhost",
@@ -56,7 +56,7 @@ async function recordSubmission(body: SubmissionBody) {
   if (!(requiredFields.every(key => body[key]))) {
     throw "Not all required fields are filled in";
   }
-  let conn: mariadb.PoolConnection;
+  let conn: mariadb.PoolConnection | undefined;
   try {
     conn = await pool.getConnection();
     await conn.query("SET sql_mode=EMPTY_STRING_IS_NULL;")

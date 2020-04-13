@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node js/index.js",
     "tsc": "tsc",
-    "prestart": "tsc"
+    "prestart": "npm run tsc"
   },
   "dependencies": {
     "@types/express": "^4.17.6",
