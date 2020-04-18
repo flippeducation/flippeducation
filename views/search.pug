@@ -9,10 +9,12 @@ block content
     )
     input#submit1(type="submit" value=__("Search"))
     br
-    input#advanced-options-button(
-      type="button" value=__("Advanced Options")
-      onclick="showHideAdvancedOptions()"
-    )
+    label(for="advanced-options-checkbox")
+      input#advanced-options-button(
+        type="button" value=__("Advanced Options")
+        onclick="showHideAdvancedOptions()"
+      )
+    input#advanced-options-checkbox(type="checkbox")
     #advanced-options
       label= __("Language")
         select(name="lang")
@@ -31,4 +33,3 @@ block content
           input(type="number" name="age" min="0" max="256")
       br
       input(type="submit" value="Search")
-  script(src="js/search.js" defer)

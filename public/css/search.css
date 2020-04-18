@@ -1,3 +1,36 @@
 #search {
     width: 16em;
 }
+
+#advanced-options {
+    visibility: hidden;
+}
+
+#advanced-options-button {
+    pointer-events: fill;
+}
+
+label[for="advanced-options-checkbox"] {
+    position: relative;
+}
+
+label[for="advanced-options-checkbox"]:after {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+}
+
+#advanced-options-checkbox {
+    display: none;
+}
+
+#advanced-options-checkbox:checked ~ #advanced-options {
+    visibility: visible;
+}
+
+/* https://stackoverflow.com/a/37504514 */
