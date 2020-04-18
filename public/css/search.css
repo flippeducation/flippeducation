@@ -6,10 +6,6 @@
     visibility: hidden;
 }
 
-#advanced-options-button {
-    pointer-events: fill;
-}
-
 label[for="advanced-options-checkbox"] {
     position: relative;
 }
