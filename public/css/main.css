@@ -34,7 +34,11 @@ the Responsive Horizontal-to-Vertical Menu code found at
 <https://purecss.io/layouts/tucked-menu-vertical/>, which is
 available under the zlib License as per <https://purecss.io/layouts/>.
 */
-.custom-wrapper {
+#hamburger-toggle-checkbox {
+    display: none;
+}
+
+nav {
     margin-bottom: 1em;
     -webkit-font-smoothing: antialiased;
     height: 2.1em;
@@ -45,19 +49,15 @@ available under the zlib License as per <https://purecss.io/layouts/>.
     transition: height 0.5s;
 }
 
-.custom-wrapper.open {
+#hamburger-toggle-checkbox:checked ~ nav {
     height: 10em;
 }
 
-.custom-wrapper.open .pure-menu-link {
+#hamburger-toggle-checkbox:checked ~ nav .pure-menu-link {
     position: relative;
 }
 
-.custom-menu-3 {
-    text-align: right;
-}
-
-.custom-toggle {
+#hamburger-toggle {
     width: 34px;
     height: 34px;
     position: absolute;
@@ -67,7 +67,7 @@ available under the zlib License as per <https://purecss.io/layouts/>.
     cursor: pointer;
 }
 
-.custom-toggle .bar {
+#hamburger-toggle .bar {
     background-color: #777;
     display: block;
     width: 20px;
@@ -82,34 +82,41 @@ available under the zlib License as per <https://purecss.io/layouts/>.
     transition: all 0.5s;
 }
 
-.custom-toggle .bar:first-child {
+#hamburger-toggle .bar:first-child {
     -webkit-transform: translateY(-6px);
     -moz-transform: translateY(-6px);
     -ms-transform: translateY(-6px);
     transform: translateY(-6px);
 }
 
-.custom-toggle.x .bar {
+#hamburger-toggle-checkbox:checked ~ nav #hamburger-toggle .bar {
     -webkit-transform: rotate(45deg);
     -moz-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
 }
 
-.custom-toggle.x .bar:first-child {
+#hamburger-toggle-checkbox:checked ~ nav #hamburger-toggle
+    .bar:first-child
+{
     -webkit-transform: rotate(-45deg);
     -moz-transform: rotate(-45deg);
     -ms-transform: rotate(-45deg);
     transform: rotate(-45deg);
 }
 
+#hamburger-toggle-checkbox:checked ~ nav .pure-menu-horizontal
+    .pure-menu-item,
+#hamburger-toggle-checkbox:checked ~ nav .pure-menu-horizontal
+    .pure-menu-heading,
+#hamburger-toggle-checkbox:checked ~ nav .pure-menu-horizontal
+    .pure-menu-separator
+{
+    display: block;
+}
+
 @media (max-width: 47.999em) {
-
-    .custom-menu-3 {
-        text-align: left;
-    }
-
-    .custom-toggle {
+    #hamburger-toggle {
         display: block;
     }
 
@@ -117,9 +124,8 @@ available under the zlib License as per <https://purecss.io/layouts/>.
         display: none;
     }
 
-    #menu-items.open {
+    #hamburger-toggle-checkbox:checked ~ nav #menu-items {
         display: inline-block;
     }
-
 }
-/* End of Responsive Horizontal-to-Vertical Menu code. */
+/* End of code adapted from "Responsive Horizontal-to-Vertical Menu". */
