@@ -26,5 +26,7 @@
 	"Submit": "Submit",
 	"Privacy Policy": "Privacy Policy",
 	"License": "License",
-	"Fields marked with a %s are required.": "Fields marked with a %s are required."
+	"Fields marked with a %s are required.": "Fields marked with a %s are required.",
+	"Video submission": "Video submission",
+	"successful": "successful"
 }
