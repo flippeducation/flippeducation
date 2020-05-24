@@ -1,0 +1,15 @@
+extends default
+block content
+  h1 Submissions
+  each submission in submissions
+    h2 Submission #{submission.id}
+    p Name: #{submission.name || "None"}
+    p Language: #{submission.language || "None"}
+    p Lecturer ID: #{submission.lecturer_id || "None"}
+    p Lecturer name: #{submission.lecturer_name || "None"}
+    p Lecturer display name: #{submission.lecturer_display_name || "None"}
+    p Topics: #{submission.topics || "None"}
+    p Subjects: #{submission.subjects || "None"}
+    p URL: #{submission.url || "None"}
+    p Grade level: #{submission.grade_level || "None"}
+    p Notes: #{submission.notes || "None"}

@@ -7,7 +7,7 @@ import querystring = require("querystring");
 import i18n = require("i18n");
 
 import database = require("./database");
-import { Pages, SubmissionBody } from "./types";
+import { Pages, SubmissionBody, Submission } from "./types";
 
 const rootdir = pathLib.dirname(__dirname);
 
@@ -68,6 +68,12 @@ const pages: Pages = new Map([
     title: "Submit Videos",
     navbar: true
   }],
+  ["/submissions", {
+    view: "submissions",
+    title: "Submissions",
+    navbar: true,
+    callback: submissionsCallback
+  }],
   ["/license", {
     view: "license",
     title: "License",
@@ -82,7 +88,7 @@ const pages: Pages = new Map([
   }],
 ]);
 
-for (const [path, {view, title, localized}] of pages) {
+for (const [path, {view, title, localized, callback}] of pages) {
   if (localized) {
     app.get(path, async (req, res) => {
       try {
@@ -108,15 +114,20 @@ for (const [path, {view, title, localized}] of pages) {
       }
     });
   }
-  app.get(path, async (req, res) => {
-    res.render(view, {
-      page: path,
-      title: title,
-      pages: pages,
-      query: req.query,
-      __: req.__
+  else if (callback) {
+    app.get(path, callback(path, view, title));
+  }
+  else {
+    app.get(path, async (req, res) => {
+      res.render(view, {
+        page: path,
+        title: title,
+        pages: pages,
+        query: req.query,
+        __: req.__
+      });
     });
-  });
+  }
 }
 
 database.init().catch(err => console.error(err));
@@ -130,6 +141,32 @@ async function logSpam(body: SubmissionBody) {
   }
   catch (err) {
     console.error(`Error writing data to logfile:\n${err}`);
+  }
+}
+
+function submissionsCallback(path, view, title) {
+  return async (req, res) => {
+    // TODO: require authentication
+
+    let submissions: Submission[];
+    try {
+      submissions = await database.listSubmissions(
+        req.query.language,
+        parseInt(req.query.itemsPerPage) || undefined,
+        parseInt(req.query.startId) || undefined
+      );
+    }
+    catch (err) {
+       submissions = [];
+    }
+    res.render(view, {
+      page: path,
+      title: title,
+      pages: pages,
+      query: req.query,
+      __: req.__,
+      submissions: submissions
+    });
   }
 }
 

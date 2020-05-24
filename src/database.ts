@@ -1,5 +1,5 @@
 import mariadb = require("mariadb");
-import { SubmissionBody } from "./types";
+import { SubmissionBody, Submission } from "./types";
 
 // Allow environment variables to be passed from a file called ".env"---
 // this is so that database credentials (DB_USER and DB_PWD)
@@ -42,7 +42,7 @@ async function init() {
   }
 }
 
-async function recordSubmission(body: SubmissionBody) {
+async function recordSubmission(body: SubmissionBody): Promise<void> {
   if (!state.isEstablished) {
     throw "No database connection";
   }
@@ -76,8 +76,61 @@ async function recordSubmission(body: SubmissionBody) {
   }
 }
 
+/**
+ * List submissions in the database in a paginated fashion.
+ *
+ * @param language - language to use (ISO code)
+ * @param itemsPerPage - number of submissions per page
+ * @param startId - the first submission ID to check
+ */
+async function listSubmissions(
+  language: string = "en", itemsPerPage: number = 10, startId: number = 0
+): Promise<Submission[]>
+{
+  if (!state.isEstablished) {
+    throw "No database connection";
+  }
+  let conn: mariadb.PoolConnection | undefined;
+  try {
+    conn = await pool.getConnection();
+    await conn.query("SET sql_mode=EMPTY_STRING_IS_NULL;");
+    let queryResult: any = await conn.query(
+      `SELECT * FROM submissions
+      WHERE language = :language AND id >= :startId
+      LIMIT :itemsPerPage;`,
+      { language, startId, itemsPerPage }
+    );
+
+    // Convert query result to a Submission[] and return it
+    return Object.entries(queryResult)
+      .filter(([k, v]) => !isNaN(parseInt(k)))
+      .map(([k, v]) => {
+        let sub = v as Submission;
+        return {
+          id: sub.id,
+          name: sub.name,
+          language: sub.language,
+          lecturer_name: sub.lecturer_name,
+          lecturer_display_name: sub.lecturer_display_name,
+          topics: sub.topics,
+          subjects: sub.subjects,
+          url: sub.url,
+          grade_level: sub.grade_level,
+          notes: sub.notes
+        };
+      });
+  }
+  catch (err) {
+    throw "Error connecting to database";
+  }
+  finally {
+    if (conn) conn.release();
+  }
+}
+
 export = {
   get enabled() { return state.isEstablished; },
   init,
-  recordSubmission
+  recordSubmission,
+  listSubmissions,
 };
