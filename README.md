@@ -1,5 +1,5 @@
 # flippeducation
-Software driving an aggregator website for flipped classroom videos (in beta)
+Software driving an aggregator website for flipped classroom videos (work in progress)
 
 # Installation
 You will need [node.js](https://nodejs.org/), npm, and [MariaDB](https://mariadb.com/).

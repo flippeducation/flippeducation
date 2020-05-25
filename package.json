@@ -1,7 +1,7 @@
 {
   "name": "flippeducation",
   "version": "0.0.0",
-  "description": "Software driving an aggregator website for flipped classroom videos (in beta)",
+  "description": "Software driving an aggregator website for flipped classroom videos (work in progress)",
   "main": "js/index.js",
   "scripts": {
     "start": "node js/index.js",
