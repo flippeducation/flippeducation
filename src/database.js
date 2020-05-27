@@ -1,5 +1,8 @@
-import mariadb = require("mariadb");
-import { SubmissionBody, Submission } from "./types";
+const mariadb = require("mariadb");
+/**
+ * @typedef {import("./types").SubmissionBody} SubmissionBody
+ * @typedef {import("./types").Submission} Submission
+ */
 
 // Allow environment variables to be passed from a file called ".env"---
 // this is so that database credentials (DB_USER and DB_PWD)
@@ -14,14 +17,16 @@ const state = {
 };
 
 // Database connection pool
-let pool: mariadb.Pool;
+/** @type {mariadb.Pool} */
+let pool;
 
 // Create database connection pool
 async function init() {
   if (!(process.env.DB_USER && process.env.DB_PWD)) {
     throw "No database credentials provided";
   }
-  let conn: mariadb.PoolConnection | undefined;
+  /** @type {mariadb.PoolConnection | undefined} */
+  let conn;
   try {
     pool = mariadb.createPool({
       host: process.env.DB_HOST || "localhost",
@@ -42,7 +47,11 @@ async function init() {
   }
 }
 
-async function recordSubmission(body: SubmissionBody): Promise<void> {
+/**
+ * @param {SubmissionBody} body
+ * @returns {Promise<void>}
+ */
+async function recordSubmission(body) {
   if (!state.isEstablished) {
     throw "No database connection";
   }
@@ -50,13 +59,15 @@ async function recordSubmission(body: SubmissionBody): Promise<void> {
     throw "Spam detected";
   }
   // Check if all required fields are filled in
-  const requiredFields: (keyof SubmissionBody)[] = [
+  /** @type {(keyof SubmissionBody)[]} */
+  const requiredFields = [
     "name", "language", "lecturer_display_name", "url"
   ];
   if (!(requiredFields.every(key => body[key]))) {
     throw "Not all required fields are filled in";
   }
-  let conn: mariadb.PoolConnection | undefined;
+  /** @type {mariadb.PoolConnection | undefined} */
+  let conn;
   try {
     conn = await pool.getConnection();
     await conn.query("SET sql_mode=EMPTY_STRING_IS_NULL;")
@@ -79,22 +90,25 @@ async function recordSubmission(body: SubmissionBody): Promise<void> {
 /**
  * List submissions in the database in a paginated fashion.
  *
- * @param language - language to use (ISO code)
- * @param itemsPerPage - number of submissions per page
- * @param startId - the first submission ID to check
+ * @param {string} language - language to use (ISO code)
+ * @param {number} itemsPerPage - number of submissions per page
+ * @param {number} startId - the first submission ID to check
+ *
+ * @returns {Promise<Submission[]>}
  */
 async function listSubmissions(
-  language: string = "en", itemsPerPage: number = 10, startId: number = 0
-): Promise<Submission[]>
+  language = "en", itemsPerPage = 10, startId = 0
+)
 {
   if (!state.isEstablished) {
     throw "No database connection";
   }
-  let conn: mariadb.PoolConnection | undefined;
+  /** @type {mariadb.PoolConnection | undefined} */
+  let conn;
   try {
     conn = await pool.getConnection();
     await conn.query("SET sql_mode=EMPTY_STRING_IS_NULL;");
-    let queryResult: any = await conn.query(
+    let queryResult = await conn.query(
       `SELECT * FROM submissions
       WHERE language = :language AND id >= :startId
       LIMIT :itemsPerPage;`,
@@ -105,7 +119,7 @@ async function listSubmissions(
     return Object.entries(queryResult)
       .filter(([k, v]) => !isNaN(parseInt(k)))
       .map(([k, v]) => {
-        let sub = v as Submission;
+        let sub = /** @type {Submission} */ v;
         return {
           id: sub.id,
           name: sub.name,
@@ -128,7 +142,7 @@ async function listSubmissions(
   }
 }
 
-export = {
+module.exports = {
   get enabled() { return state.isEstablished; },
   init,
   recordSubmission,

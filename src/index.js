@@ -1,13 +1,17 @@
-import express = require("express");
-import bodyParser = require("body-parser");
-import pathLib = require("path");
-import fs = require("fs");
-const fsp = fs.promises;
-import querystring = require("querystring");
-import i18n = require("i18n");
+const express = require("express");
+const bodyParser = require("body-parser");
+const pathLib = require("path");
+const fsp = require("fs").promises;
+const querystring = require("querystring");
+const i18n = require("i18n");
 
-import database = require("./database");
-import { Pages, SubmissionBody, Submission } from "./types";
+const database = require("./database.js");
+
+/**
+ * @typedef {import("./types").Pages} Pages
+ * @typedef {import("./types").SubmissionBody} SubmissionBody
+ * @typedef {import("./types").Submission} Submission
+ */
 
 const rootdir = pathLib.dirname(__dirname);
 
@@ -51,7 +55,8 @@ new Map([
   });
 });
 
-const pages: Pages = new Map([
+/** @type {Pages} */
+const pages = new Map([
   ["/", {
     view: "index",
     title: "",
@@ -132,7 +137,10 @@ for (const [path, {view, title, localized, callback}] of pages) {
 
 database.init().catch(err => console.error(err));
 
-async function logSpam(body: SubmissionBody) {
+/**
+ * @param {SubmissionBody} body
+ */
+async function logSpam(body) {
   try {
     await fsp.appendFile(logfile,
       `SPAM DETECTED at ${new Date()}:\n`
@@ -148,7 +156,8 @@ function submissionsCallback(path, view, title) {
   return async (req, res) => {
     // TODO: require authentication
 
-    let submissions: Submission[];
+    /** @type {Submission[]} */
+    let submissions;
     try {
       submissions = await database.listSubmissions(
         req.query.language,

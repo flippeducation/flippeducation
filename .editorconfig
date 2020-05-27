@@ -4,14 +4,6 @@ end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.{ts,pug}]
-indent_style = space
-indent_size = 2
-
-[public/*.js]
-indent_style = space
-indent_size = 2
-
-[public/*.js]
+[*.{js,ts,pug,json}]
 indent_style = space
 indent_size = 2
