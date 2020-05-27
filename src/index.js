@@ -8,7 +8,8 @@ const i18n = require("i18n");
 const database = require("./database.js");
 
 /**
- * @typedef {import("./types").Pages} Pages
+ * @typedef {import("./types").Page} Page
+ * @typedef {import("./types").PageCallback} PageCallback
  * @typedef {import("./types").SubmissionBody} SubmissionBody
  * @typedef {import("./types").Submission} Submission
  */
@@ -55,7 +56,7 @@ new Map([
   });
 });
 
-/** @type {Pages} */
+/** @type {Map<string, Page>} */
 const pages = new Map([
   ["/", {
     view: "index",
@@ -152,6 +153,7 @@ async function logSpam(body) {
   }
 }
 
+/** @type {PageCallback} */
 function submissionsCallback(path, view, title) {
   return async (req, res) => {
     // TODO: require authentication
