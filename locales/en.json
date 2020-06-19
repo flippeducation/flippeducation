@@ -29,5 +29,8 @@
 	"Fields marked with a %s are required.": "Fields marked with a %s are required.",
 	"Video submission": "Video submission",
 	"successful": "successful",
-	"Submissions": "Submissions"
+	"Submissions": "Submissions",
+	"Accept": "Accept",
+	"Reject": "Reject",
+	"Accept submission": "Accept submission"
 }

@@ -13,3 +13,12 @@ block content
     p URL: #{submission.url || "None"}
     p Grade level: #{submission.grade_level || "None"}
     p Notes: #{submission.notes || "None"}
+    form(method="post")
+      input(
+        type="submit" value=__("Accept")
+        formaction=`/submissions/accept?id=${submission.id}`
+      )
+      input(
+        type="submit" value=__("Reject")
+        formaction=`/submissions/reject?id=${submission.id}`
+      )

@@ -78,7 +78,13 @@ const pages = new Map([
     view: "submissions",
     title: "Submissions",
     navbar: true,
-    callback: submissionsCallback
+    callback: submissions_callback
+  }],
+  ["/accept_submission", {
+    view: "accept_submission",
+    title: "Accept submission",
+    navbar: false,
+    callback: accept_submission_callback
   }],
   ["/license", {
     view: "license",
@@ -154,7 +160,7 @@ async function logSpam(body) {
 }
 
 /** @type {PageCallback} */
-function submissionsCallback(path, view, title) {
+function submissions_callback(path, view, title) {
   return async (req, res) => {
     // TODO: require authentication
 
@@ -178,7 +184,33 @@ function submissionsCallback(path, view, title) {
       __: req.__,
       submissions: submissions
     });
-  }
+  };
+}
+
+/** @type {PageCallback} */
+function accept_submission_callback(path, view, title) {
+  return async (req, res) => {
+    /** @type {Submission} */
+    let submission;
+    try {
+      submission = (await database.listSubmissions(
+        req.query.language,
+        1,
+        parseInt(req.query.id) || undefined
+      ))[0];
+    }
+    catch (err) {
+      submission = {};
+    }
+    res.render(view, {
+      page: path,
+      title: title,
+      pages: pages,
+      query: req.query,
+      __: req.__,
+      submission: submission || {}
+    });
+  };
 }
 
 app.post("/submit", async (req, res) => {
@@ -200,6 +232,15 @@ app.post("/submit", async (req, res) => {
       res.redirect(`/?success=${err}`);
     }
   }
+});
+
+app.post("/submissions/accept", (req, res) => {
+  res.redirect(`/accept_submission?id=${req.query.id}`);
+});
+
+app.post("/submissions/reject", (req, res) => {
+  // TODO update database
+  res.redirect("/");
 });
 
 app.use((req, res) => {
