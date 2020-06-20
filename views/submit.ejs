@@ -1,0 +1,108 @@
+<% function form_control(name, display_name, required, ctrlType,
+			autocomplete="on", options=[]) { %>
+	<div class="pure-u-1-2 pure-u-md-1-4 form-control-label">
+		<label for="submit-form-<%= name %>"><%= display_name %><%
+			if (required) { %><span class="required">*</span><% } %>:
+		</label>
+	</div>
+	<div class="pure-u-1-2 pure-u-md-1-4 form-control"><%
+		switch (ctrlType) {
+		case "select": %>
+			<select id="submit-form-<%= name %>" name="<%= name %>"
+					autocomplete="<%= autocomplete %>">
+				<% for ([opt_name, opt_display_name] of options) { %>
+					<option value="<%= opt_name.replace('-', '_') %>"
+						<% if (query[name] === opt_name) { %>
+							selected="selected"
+						<% } %> >
+						<%= opt_display_name %> (<%= opt_name %>)
+					</option>
+				<% } %>
+			</select>
+		<% break;
+		case "textarea": %>
+			<textarea id="submit-form-<%= name %>" name="<%= name %>"
+					autocomplete="<%= autocomplete %>"><%= query[name] || ""
+			%></textarea>
+		<% break;
+		default: %>
+			<input id="submit-form-<%= name %>" type="<%= ctrlType %>"
+					name="<%= name %>" autocomplete="<%= autocomplete %>"
+					value="<%= query[name] || "" %>" />
+		<% }
+	%></div>
+	<div class="pure-u-md-1-2"></div>
+<% } %>
+<!DOCTYPE html>
+<html lang="<%= locale %>">
+	<head>
+		<%- include("head") %>
+		<link rel="stylesheet" type="text/css" href="/css/submit.css" />
+	</head>
+	<body>
+		<%- include("header") %>
+		<p><%- __("Fields marked with a %s are required.",
+			'<span class="required">*</span>'
+		) %></p>
+		<form action="/submit" method="post">
+			<div class="pure-g">
+				<%= form_control(
+					"name", __("Video name"), true, "text"
+				) %>
+				<%= form_control(
+					"language", __("Language"), true, "select",
+					autocomplete="language", options=[
+						["en", "English"], ["zh", "中文"], ["pt", "português"]
+					]
+				) %>
+				<%= form_control(
+					"lecturer_name", __("Lecturer full name"), false, "text",
+					autocomplete="name"
+				) %>
+				<%= form_control(
+					"lecturer_display_name",
+					__("Lecturer display name (must be unique)"), true, "text",
+					autocomplete="username"
+				) %>
+				<%= form_control(
+					"topics", __("Topic(s) (e.g. %s)", __("partial fractions")),
+					false, "text"
+				) %>
+				<%= form_control(
+					"subjects",
+					__("Subject(s) (e.g. %s, %s)", __("calculus"),
+					__("AP Calculus BC")), false, "text"
+				) %>
+				<%= form_control(
+					"url", __("Video URL"), true, "text", autocomplete="url"
+				) %>
+				<%= form_control(
+					"grade_level", __("Grade level / experience level"), false,
+					"text"
+				) %>
+				<%= form_control(
+					"notes", __("Any other notes"), false, "textarea"
+				) %>
+				<div id="phone_number-label"
+						class="pure-u-1-2 pure-u-md-1-4 form-control-label">
+					<label for="submit-form-phone_number">
+						Phone number at which to contact
+						you<span class="required">*</span>:
+					</label>
+				</div>
+				<div class="pure-u-1-2 pure-u-md-1-4 form-control">
+					<input id="submit-form-phone_number" type="text"
+						name="phone_number" autocomplete="off" tabindex="-1" />
+				</div>
+				<div class="pure-u-md-1-2"></div>
+				<div class="pure-u-1-2 pure-u-md-1-4"></div>
+				<div class="pure-u-1-2 pure-u-md-1-4">
+					<input id="submit-form-submit" type="submit"
+						value="<%= __('Submit') %>" />
+				</div>
+				<div class="pure-u-md-1-2"></div>
+			</div>
+		</form>
+		<%- include("footer") %>
+	</body>
+</html>

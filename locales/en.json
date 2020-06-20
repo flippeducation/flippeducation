@@ -28,9 +28,10 @@
 	"License": "License",
 	"Fields marked with a %s are required.": "Fields marked with a %s are required.",
 	"Video submission": "Video submission",
-	"successful": "successful",
 	"Submissions": "Submissions",
 	"Accept": "Accept",
 	"Reject": "Reject",
-	"Accept submission": "Accept submission"
+	"Accept submission": "Accept submission",
+	"Video submission unsuccessful: %s": "Video submission unsuccessful: %s",
+	"Video submission successful": "Video submission successful"
 }

@@ -4,6 +4,7 @@ const pathLib = require("path");
 const fsp = require("fs").promises;
 const querystring = require("querystring");
 const i18n = require("i18n");
+const marked = require("marked");
 
 const database = require("./database.js");
 
@@ -21,7 +22,7 @@ const logfile = pathLib.join(rootdir, "flippeducation.log");
 const app = express();
 const port = 3000;
 
-app.set("view engine", "pug");
+app.set("view engine", "ejs");
 app.set("views", pathLib.join(rootdir, "views"));
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -103,25 +104,27 @@ const pages = new Map([
 for (const [path, {view, title, localized, callback}] of pages) {
   if (localized) {
     app.get(path, async (req, res) => {
+      let locale;
+      let mdFile;
       try {
+        locale = req.getLocale();
+        mdFile = `${view}_${locale}.md`;
         // Check if localized view file is accessible
-        await fsp.access(pathLib.join(rootdir,
-          `views/${view}_${req.getLocale()}.pug`
-        ));
-        res.render(`${view}_${req.getLocale()}`, {
-          page: path,
-          title: title,
-          pages: pages,
-          query: req.query
-        });
+        await fsp.access(pathLib.join(rootdir, "views", mdFile));
       }
       catch (err) {
-        // Render English version (fallback)
-        res.render(`${view}_en`, {
+        // Use English version as fallback
+        mdFile = `${view}_en.md`;
+      }
+      finally {
+        res.render("markdown", {
           page: path,
           title: title,
           pages: pages,
-          query: req.query
+          query: req.query,
+          locale: locale,
+          mdFile: mdFile,
+          marked: marked
         });
       }
     });
@@ -136,7 +139,8 @@ for (const [path, {view, title, localized, callback}] of pages) {
         title: title,
         pages: pages,
         query: req.query,
-        __: req.__
+        __: req.__,
+        locale: req.getLocale()
       });
     });
   }
@@ -182,6 +186,7 @@ function submissions_callback(path, view, title) {
       pages: pages,
       query: req.query,
       __: req.__,
+      locale: req.getLocale(),
       submissions: submissions
     });
   };
@@ -190,7 +195,7 @@ function submissions_callback(path, view, title) {
 /** @type {PageCallback} */
 function accept_submission_callback(path, view, title) {
   return async (req, res) => {
-    /** @type {Submission} */
+    /** @type {Partial<Submission>} */
     let submission;
     try {
       submission = (await database.listSubmissions(
@@ -208,6 +213,7 @@ function accept_submission_callback(path, view, title) {
       pages: pages,
       query: req.query,
       __: req.__,
+      locale: req.getLocale(),
       submission: submission || {}
     });
   };
@@ -248,6 +254,8 @@ app.use((req, res) => {
   res.render("404", {
     page: "/404",
     title: "404",
-    pages: pages
+    pages: pages,
+    query: req.query,
+    locale: req.getLocale()
   });
 });

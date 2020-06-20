@@ -7,3 +7,6 @@ trim_trailing_whitespace = true
 [*.{js,ts,pug,json}]
 indent_style = space
 indent_size = 2
+
+[*.{ejs,html}]
+indent_style = tab

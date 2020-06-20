@@ -1,5 +1,5 @@
 export type PageCallback = (path: string, view: string, title: string) =>
-  (req: any, res: any) => Promise<any>
+  (req: any, res: any) => Promise<any>;
 
 // A data structure to hold information about a page of the website
 export type Page = {
