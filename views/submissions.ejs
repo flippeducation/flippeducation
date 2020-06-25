@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="<%= locale %>">
+	<head>
+		<%- include("head") %>
+	</head>
+	<body>
+		<%- include("header") %>
+		<h1>Submissions</h1>
+		<% for (submission of submissions) { %>
+				<h2>Submission <%= submission.id %></h2>
+				<p>Name: <%= submission.name || "None" %></p>
+				<p>Language: <%= submission.language || "None" %></p>
+				<p>Lecturer ID: <%= submission.lecturer_id || "None" %></p>
+				<p>Lecturer name: <%= submission.lecturer_name || "None" %></p>
+				<p>Lecturer display name:
+				<%= submission.lecturer_display_name || "None" %></p>
+				<p>Topics: <%= submission.topics || "None" %></p>
+				<p>Subjects: <%= submission.subjects || "None" %></p>
+				<p>URL: <%= submission.url || "None" %></p>
+				<p>Grade level: <%= submission.grade_level || "None" %></p>
+				<p>Notes: <%= submission.notes || "None" %></p>
+				<form method="post">
+					<input type="submit" value="<%= __('Accept') %>"
+					formaction="/submissions/accept?id=<%= submission.id %>" />
+					<input type="submit" value="<%= __('Reject') %>"
+					formaction="/submissions/reject?id=<%= submission.id %>" />
+				</form>
+		<% } %>
+		<%- include("footer") %>
+	</body>
+</html>

@@ -11,7 +11,7 @@
     margin-top: 1em;
 }
 
-#submit-form-phone-number,
-label[for=submit-form-phone-number] {
+#submit-form-phone_number,
+label[for=submit-form-phone_number] {
     display: none !important;
 }

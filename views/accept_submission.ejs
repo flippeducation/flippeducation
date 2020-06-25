@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="<%= locale %>">
+	<head>
+		<%- include("head") %>
+	</head>
+	<body>
+		<%- include("header") %>
+		<h1>Submission <%= submission.id %></h1>
+		<p>Name: <%= submission.name || "None" %></p>
+		<p>Language: <%= submission.language || "None" %></p>
+		<p>Lecturer ID: <%= submission.lecturer_id || "None" %></p>
+		<p>Lecturer name: <%= submission.lecturer_name || "None" %></p>
+		<p>Lecturer display name:
+			<%= submission.lecturer_display_name || "None" %></p>
+		<p>Topics: <%= submission.topics || "None" %></p>
+		<p>Subjects: <%= submission.subjects || "None" %></p>
+		<p>URL: <%= submission.url || "None" %></p>
+		<p>Grade level: <%= submission.grade_level || "None" %></p>
+		<p>Notes: <%= submission.notes || "None" %></p>
+		<%- include("footer") %>
+	</body>
+</html>

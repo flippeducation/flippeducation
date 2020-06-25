@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="<%= locale %>">
+	<head>
+		<%- include("head") %>
+		<link rel="stylesheet" type="text/css" href="/css/search.css" />
+	</head>
+	<body>
+		<%- include("header") %>
+		<form>
+			<input id="search" type="search" name="title"
+				placeholder="<%= __('Enter the title of the video here') %>" />
+			<input id="submit1" type="submit" value="<%= __('Search') %>" />
+			<br />
+			<input id="advanced-options-button" type="button"
+				value="<%= __('Advanced Options') %>"
+				onclick="showHideAdvancedOptions()" />
+			<div id="advanced-options">
+				<label><%= __("Language") %>
+					<select name="lang">
+						<option>English</option>
+					</select>
+				</label>
+				<br />
+				<label><%= __("Subject") %>
+					<select name="subject">
+						<option>Math</option>
+						<option>Science</option>
+						<option>English</option>
+					</select>
+				</label>
+				<br />
+				<label><%= __("Grade level") %>
+					<input name="grade-level"
+						placeholder="<%= __('Grade level') %>" />
+				</label>
+				<br />
+				<label>Age
+					<input type="number" name="age" min="0" max="256" />
+				</label>
+				<br />
+				<input type="submit" value="<%= __('Search') %>" />
+			</div>
+		</form>
+		<script src="js/search.js" defer></script>
+		<%- include("footer") %>
+	</body>
+</html>
