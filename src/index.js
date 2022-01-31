@@ -4,7 +4,7 @@ const pathLib = require("path");
 const fsp = require("fs").promises;
 const querystring = require("querystring");
 const i18n = require("i18n");
-const marked = require("marked");
+const { marked } = require("marked");
 
 const database = require("./database.js");
 
